@@ -1,12 +1,14 @@
 import { Box, Icon, Image, Flex, Text, FormControl, FormLabel, Input, FormErrorMessage, InputGroup, InputRightElement, IconButton } from "@chakra-ui/react";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import { auth } from "../../firebase/config"; // Import the auth service
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { AuthError, getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import imagixLogo from '../../assets/icon-logo.png';
 import { useNavigate } from "react-router-dom";
 import theme from "../../styles/theme";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
+import SubmitBtn from "../../components/SubmitBtn";
+import { toast } from "react-toastify";
 
 
 const Login: React.FC = () => {
@@ -17,19 +19,67 @@ const Login: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [uID, setUID] = useState('');
     const navigate = useNavigate();
 
 
-    const handleLogin = async () => {
+    const handleEmailChange = (e: any) => {
+        setEmail(e.target.value);
+        setEmailError("");
+    };
+
+    const handlePasswordChange = (e: any) => {
+        setPassword(e.target.value);
+        setPasswordError("");
+    };
+
+
+    const handleLogin = async (e: any) => {
+        e.preventDefault();
+
+        setLoading(true);
+        setError(null);
+
+        if (email.trim() === "" || password.trim() === "") {
+            setError("Enter required field to Login");
+            setLoading(false);
+            return;
+        }
+
         try {
-            // Sign in with Firebase Authentication
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
+
+            if (user) {
+                setUID(user.uid);
+            }
+            toast.success("Login Success!");
             console.log("Logged in user:", user);
-        } catch (error) {
-            console.error(error);
+            navigate(`/home/${uID}`);
+        } catch (error: any) {
+            const errorCode = (error as AuthError).code;
+            const errorMessage = (error as AuthError).message;
+
+            switch (errorCode) {
+                case "auth/invalid-email":
+                    setEmailError(errorMessage);
+                    break;
+                case "auth/user-not-found":
+                    setEmailError(errorMessage);
+                    break;
+                case "auth/wrong-password":
+                    setPasswordError(errorMessage);
+                    setLoading(false);
+                    break;
+                default:
+                    setError(errorMessage);
+                    toast.error("Login failed. Please check your credentials.");
+            }
+        } finally {
+            setLoading(false);
         }
-    }
+    };
+
     return (
         <Box
             // bg={"#000000"}
@@ -79,7 +129,7 @@ const Login: React.FC = () => {
                                 <Input
                                     type="email"
                                     value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    onChange={handleEmailChange}
                                     placeholder={"Enter your email address"}
                                     fontSize={"14px"}
                                     fontWeight={500}
@@ -98,7 +148,7 @@ const Login: React.FC = () => {
                                     <Input
                                         type={showPassword ? "text" : "password"}
                                         value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
+                                        onChange={handlePasswordChange}
                                         placeholder={"Enter your password"}
                                         fontSize={"14px"}
                                         fontWeight={500}
@@ -112,13 +162,14 @@ const Login: React.FC = () => {
                                     <InputRightElement>
                                         <IconButton
                                             aria-label={"show-password"}
-                                            icon={showPassword ? <FontAwesomeIcon icon={faEyeSlash} /> : <FontAwesomeIcon icon={faEye}/>}
+                                            icon={showPassword ? <FontAwesomeIcon icon={faEyeSlash} /> : <FontAwesomeIcon icon={faEye} />}
                                             onClick={() => setShowPassword(!showPassword)}
                                             bg={"transparent"}
-                                            _hover={{color: "#718096"}}
+                                            _hover={{ color: "#718096" }}
                                             my={"15px"}
                                             mr={"10px"}
                                             border={"0px"}
+                                            color={"#FFFFFF"}
                                         />
                                     </InputRightElement>
                                 </InputGroup>
@@ -135,23 +186,12 @@ const Login: React.FC = () => {
                                     {error}
                                 </Text>
                             )}
+                            <SubmitBtn loadingText={"Signing-in"} btntitle={"LOG IN"} onClick={handleLogin} isLoading={loading} />
                         </form>
                     </Flex>
                 </Flex>
             </Box>
         </Box>
-        // <VStack spacing={4}>
-        //   <FormControl>
-        //     <FormLabel>Email</FormLabel>
-        //     <Input type="email" value={email || ''} onChange={(e) => setEmail(e.target.value)} />
-        //   </FormControl>
-        //   <FormControl>
-        //     <FormLabel>Password</FormLabel>
-        //     <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        //   </FormControl>
-        //   <Button onClick={handleLogin}>Login</Button>
-        //   {/* {user && <div>Logged in as: {user}</div>} */}
-        // </VStack>
     );
 }
 
