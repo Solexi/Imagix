@@ -30,7 +30,7 @@ export const imageData = [
     {
         id: 3,
         url: coffee,
-        tags: ["Wallpaper", "Aesthetics", "Coffee", "Cafe"]
+        tags: ["Wallpaper", "Aesthetics", "Coffee"]
     },
     {
         id: 4,
@@ -50,7 +50,7 @@ export const imageData = [
     {
         id: 7,
         url: paintMan,
-        tags: ["Painting", "Landscape", "Portrait", "Art"]
+        tags: ["Painting", "Portrait", "Art"]
     },
     {
         id: 8,

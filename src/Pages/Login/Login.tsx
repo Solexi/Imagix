@@ -135,7 +135,7 @@ const Login: React.FC = () => {
                                     fontWeight={500}
                                     p={"16px"}
                                     py={"4px"}
-                                    bg={"#000000"}
+                                    bg={"#F0F1F8"}
                                     borderRadius={5}
                                     w={"376px"}
                                     required
@@ -154,7 +154,7 @@ const Login: React.FC = () => {
                                         fontWeight={500}
                                         p={"16px"}
                                         py={"4px"}
-                                        bg={"#000000"}
+                                        bg={"#F0F1F8"}
                                         borderRadius={5}
                                         w={"376px"}
                                         required
@@ -169,7 +169,7 @@ const Login: React.FC = () => {
                                             my={"15px"}
                                             mr={"10px"}
                                             border={"0px"}
-                                            color={"#FFFFFF"}
+                                            color={"#767676"}
                                         />
                                     </InputRightElement>
                                 </InputGroup>

@@ -1,9 +1,11 @@
-import { Box, Flex, Image, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
+import {Flex, Image, Input, InputGroup, InputRightElement, Link as ChakraLink, Icon, Badge } from "@chakra-ui/react";
 import imagixLogo from '../../assets/icon-logo.png';
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faCircleCheck, faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { Link } from "react-router-dom";
+import { FaCheckCircle, FaUser } from "react-icons/fa";
 
 interface NavbarProps {
     onSearch: (query: string) => void;
@@ -13,6 +15,20 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch, onClearSearch }) => {
     const [query, setQuery] = useState('');
     const [showResults, setShowResults] = useState(false);
     const [clearQuery, setClearQuery] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect (() => {
+        const auth = getAuth();
+
+        // Check if the user is already logged in
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setIsLoggedIn(true);
+            } else {
+                setIsLoggedIn(false);
+            }
+        });
+    })
 
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -115,48 +131,45 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch, onClearSearch }) => {
                     )}
                 </InputGroup>
             </Flex>
-            Login
+            {!isLoggedIn ? (
+                <ChakraLink
+                    as={Link}
+                    cursor={"pointer"}
+                    to={"/login"}
+                    color={"#FFFFFF"}
+                    // fontSize={"14px"}
+                    fontWeight={700}
+                    fontFamily={"Poppins"}
+                    _hover={{borderBottom: "3px solid #036"}}
+                >
+                    Login
+                </ChakraLink>
+            ) : (
+                <Flex>
+                <Icon
+                    as={FaUser}
+                    w={"40px"}
+                    h={"30px"}
+                />
+                {/* <Badge  
+                    borderRadius="50%" 
+                    // px={"6px"}
+                    h={"14px"}
+                    fontSize={"12px"} fontWeight={900} textAlign={"center"} pos={"relative"} top={"1"} right={"5"}> */}
+                    <Icon
+                        pos={"relative"}
+                        as={FaCheckCircle}
+                        top={"-1"} right={"5"}
+                        color={"#000000"}
+                        borderRadius={"50%"}
+                        bg={"#FFFFFF"}
+                    />
+                {/* </Badge> */}
+                </Flex>
+            )}
         </Flex>
     )
 
 }
 
 export default Navbar;
-
-
-// import React, { useState } from "react";
-// import { Input, Box, Grid, GridItem } from "@chakra-ui/react";
-// import { Image } from "./Image"; // Import your Image component
-
-// const ImageGallery = ({ images }) => {
-//   const [searchQuery, setSearchQuery] = useState("");
-
-//   // Filter images based on the search query
-//   const filteredImages = images.filter((image) =>
-//     image.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-//   );
-
-//   const handleSearchChange = (event) => {
-//     setSearchQuery(event.target.value);
-//   };
-
-//   return (
-//     <div>
-//       <Input
-//         placeholder="Search by tag..."
-//         value={searchQuery}
-//         onChange={handleSearchChange}
-//       />
-
-//       <Grid templateColumns="repeat(3, 1fr)" gap={4}>
-//         {filteredImages.map((image) => (
-//           <GridItem key={image.id}>
-//             <Image src={image.url} alt={`Image ${image.id}`} />
-//           </GridItem>
-//         ))}
-//       </Grid>
-//     </div>
-//   );
-// };
-
-// export default ImageGallery;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Image, Flex } from "@chakra-ui/react";
+import { Box, Image, Flex, Text } from "@chakra-ui/react";
 import Navbar from "../../components/Navbar";
 import { imageData } from "../../static";
 import LoadingSpinner from "../../components/LoadingSpinner";
@@ -7,6 +7,8 @@ import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import LoginPopup from "../../components/LoginPopup/index";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { motion } from "framer-motion";
+import NoImage from "../../components/NoImage";
 
 interface ImageData {
     id: number;
@@ -21,6 +23,7 @@ const Home = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [showLoginPopup, setShowLoginPopup] = useState(false);
+    const [noImages, setNoImages] = useState(false);
 
     useEffect(() => {
         // Initialize Firebase authentication
@@ -50,14 +53,20 @@ const Home = () => {
     }, []);
 
     const handleSearch = (searchTerm: string) => {
+        setLoading(true);
         setSearchTerm(searchTerm);
 
         // Filter images based on tags
         const filtered = images.filter((image) =>
             image.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase()))
         );
-
+        setLoading(false)
         setFilteredImages(filtered);
+        if (filtered.length === 0) {
+            setNoImages(true);
+        } else {
+            setNoImages(false); 
+        }
     };
 
     const clearSearch = () => {
@@ -82,7 +91,10 @@ const Home = () => {
 
     if (loading) {
         return (
-            <Box>
+            <Box
+                position={"relative"}
+                top={"280px"}
+            >
                 <LoadingSpinner />
             </Box>
         );
@@ -94,6 +106,7 @@ const Home = () => {
                 dir="column"
                 height="100vh"
                 overflow="hidden"
+                // w={"100%"}
             >
                 <Navbar onSearch={handleSearch} onClearSearch={clearSearch} />
                 <Box
@@ -108,17 +121,61 @@ const Home = () => {
                         gap="30px"
                         gridTemplateColumns="repeat(5, 1fr)"
                     >
-                        {(searchTerm ? filteredImages : images).map(
+                        {searchTerm && noImages ? (
+                            <Box
+                                position={"absolute"}
+                                top={"180px"}
+                                left={"520px"}
+                            >
+                                <NoImage />
+                            </Box>
+                        ) : (
+                        (searchTerm ? filteredImages : images).map(
                             (image: ImageData, index: number) => (
-                                <DNDImage
-                                    key={image.id}
-                                    index={index}
-                                    image={image}
-                                    moveImage={moveImage}
-                                    onDragStart={handleDragStart}
-                                    isLoggedIn={isLoggedIn}
-                                />
+                                <Flex
+                                    flexDirection={"column"}
+                                >
+                                <motion.div
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.9 }}
+                                >
+                                    <DNDImage
+                                        key={image.id}
+                                        index={index}
+                                        image={image}
+                                        moveImage={moveImage}
+                                        onDragStart={handleDragStart}
+                                        isLoggedIn={isLoggedIn}
+                                    />
+                                </motion.div>
+                                <Box 
+                                    display={"flex"}
+                                    flexDir={"row"}
+                                >
+                                    {image.tags.map((tag) => (
+                                        <Flex
+                                            key={tag}
+                                            border={"0.5px dashed #EEEEEE"}
+                                            fontSize={"10px"}
+                                            fontWeight={500}
+                                            color={"#FFFFFF"}
+                                            fontFamily={"Poppins"}
+                                            borderRadius={"10px"}
+                                            px={"5px"}
+                                            py={"6px"}
+                                            mr={"5px"}
+                                            mt={"12px"}
+                                            cursor={"pointer"}
+                                            _hover={{color: "#000000", background: "#EFEFEF"}}
+                                            onClick={() => {handleSearch(tag); setSearchTerm(tag)}}
+                                        >
+                                            {tag}
+                                        </Flex>
+                                    ))}
+                                </Box>
+                                </Flex>
                             )
+                        )
                         )}
                     </Box>
                 </Box>

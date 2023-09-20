@@ -13,14 +13,16 @@ const Loader = () => {
           <Box
             display="inline-block"
             position="relative"
-            width="80px"
-            height="80px"
+            width="180px"
+            height="180px"
           >
             <Spinner
               thickness="8px"
               speed="0.65s"
               emptyColor="transparent"
-              color="#be123c"
+              color="#FFFFFF"
+              h={"100px"}
+              w={"100px"}
             />
           </Box>
           <Text fontWeight="bold" fontSize="20px" mt="20px">
