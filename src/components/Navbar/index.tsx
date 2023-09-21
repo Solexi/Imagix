@@ -62,128 +62,142 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch, onClearSearch, onToggleSearch
     const handleSearchIconClick = () => {
         onToggleSearchBar();
         handleSearch();
-      };
+    };
 
     return (
         <Flex>
-        <Flex
-            as={"nav"}
-            dir={"row"}
-            w={"100vw"}
-            justify={"space-between"}
-            h={"68px"}
-            position={"fixed"}
-            align={"center"}
-            px={"20px"}
-            zIndex={2}
-            bg={"#131313"}
-            borderBottom={"6px solid #292929"}
-        >
-            <Image
-                src={imagixLogo}
-                w={["100px", "100px", "100px", "130px"]}
-                h={["40px", "40px", "38px", "48px"]}
-            />
-            <Flex display={["none", "none", "flex"]}>
-                <InputGroup>
-                    <Input
-                        value={query}
-                        zIndex={2}
-                        w={["","","30vw","36.46vw"]}
-                        placeholder={"Search by tags..."}
-                        h={"36px"}
-                        color={"#000000"}
-                        fontSize={"16px"}
-                        fontWeight={400}
-                        bg={"#FFFFFF"}
-                        border={"2px solid #D1D5DB"}
-                        px={"10px"}
-                        borderRadius={"6px"}
-                        mx={150}
-                        _placeholder={{
-                            color: "#000000",
-                            fontSize: "16px",
-                            fontWeight: 400,
-                        }}
-                        onChange={handleInputChange}
-                        onKeyPress={(e) => {
-                            if (e.key === 'Enter') {
-                                handleSearch();
-                            }
-                        }}
-                    />
-                    {clearQuery ? (
-                        <InputRightElement
-                            position={"relative"}
-                            left={-188}
-                            top={-0.5}
-                        >
-                            <FontAwesomeIcon
-                                icon={faTimes}
-                                color="#FFFFFF"
-                                style={{ background: "#131313", padding: "7px", borderTopRightRadius: "3px", borderBottomRightRadius: "3px" }}
-                                onClick={handleClearQuery}
-                            />
-                        </InputRightElement>) : (
-                        <InputRightElement
-                            children={
+            <Flex
+                as={"nav"}
+                dir={"row"}
+                w={"100vw"}
+                justify={"space-between"}
+                h={"68px"}
+                position={"fixed"}
+                align={"center"}
+                px={"20px"}
+                zIndex={2}
+                bg={"#131313"}
+                borderBottom={"6px solid #292929"}
+            >
+                <Image
+                    src={imagixLogo}
+                    w={["100px", "100px", "100px", "130px"]}
+                    h={["40px", "40px", "38px", "48px"]}
+                />
+                <Flex display={["none", "none", "flex"]}>
+                    <InputGroup>
+                        <Input
+                            value={query}
+                            zIndex={2}
+                            w={["", "", "30vw", "36.46vw"]}
+                            placeholder={"Search by tags..."}
+                            h={"36px"}
+                            color={"#000000"}
+                            fontSize={"16px"}
+                            fontWeight={400}
+                            bg={"#FFFFFF"}
+                            border={"2px solid #D1D5DB"}
+                            px={"10px"}
+                            borderRadius={"6px"}
+                            mx={150}
+                            _placeholder={{
+                                color: "#000000",
+                                fontSize: "16px",
+                                fontWeight: 400,
+                            }}
+                            onChange={handleInputChange}
+                            onKeyPress={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleSearch();
+                                }
+                            }}
+                        />
+                        {clearQuery ? (
+                            <InputRightElement
+                                position={"relative"}
+                                left={-188}
+                                top={-0.5}
+                            >
                                 <FontAwesomeIcon
-                                    icon={faSearch}
+                                    icon={faTimes}
                                     color="#FFFFFF"
                                     style={{ background: "#131313", padding: "7px", borderTopRightRadius: "3px", borderBottomRightRadius: "3px" }}
+                                    onClick={handleClearQuery}
                                 />
-                            }
-                            position={"relative"}
-                            left={-188}
-                            top={-0.5}
-                        />
-                    )}
-                </InputGroup>
-            </Flex>
-            {!isLoggedIn ? (
-                <Flex
-                    align={"center"}
-                >
-                    <ChakraLink
-                        as={Link}
-                        cursor={"pointer"}
-                        to={"/login"}
-                        color={"#FFFFFF"}
-                        fontWeight={700}
-                        fontFamily={"Poppins"}
-                        _hover={{ borderBottom: "3px solid #036" }}
+                            </InputRightElement>) : (
+                            <InputRightElement
+                                children={
+                                    <FontAwesomeIcon
+                                        icon={faSearch}
+                                        color="#FFFFFF"
+                                        style={{ background: "#131313", padding: "7px", borderTopRightRadius: "3px", borderBottomRightRadius: "3px" }}
+                                    />
+                                }
+                                position={"relative"}
+                                left={-188}
+                                top={-0.5}
+                            />
+                        )}
+                    </InputGroup>
+                </Flex>
+                {!isLoggedIn ? (
+                    <Flex
+                        align={"center"}
                     >
-                        Login
-                    </ChakraLink>
-                    <Icon
-                        display={["flex", "flex", "none"]}
-                        ml={"10px"}
-                        as={FaSearch}
-                        w={"18px"}
-                        h={"15px"}
-                        onClick={
-                            handleSearchIconClick
-                        }
-                    />
-                </Flex>
-            ) : (
-                <Flex>
-                    <Icon
-                        as={FaUser}
-                        w={"40px"}
-                        h={"30px"}
-                    />
-                    <Icon
-                        pos={"relative"}
-                        as={FaCheckCircle}
-                        top={"-1"} right={"5"}
-                        color={"#000000"}
-                        borderRadius={"50%"}
-                        bg={"#FFFFFF"}
-                    />
-                </Flex>
-            )}
-        </Flex>
+                        <ChakraLink
+                            as={Link}
+                            cursor={"pointer"}
+                            to={"/login"}
+                            color={"#FFFFFF"}
+                            fontWeight={700}
+                            fontFamily={"Poppins"}
+                            _hover={{ borderBottom: "3px solid #036" }}
+                        >
+                            Login
+                        </ChakraLink>
+                        <Icon
+                            display={["flex", "flex", "none"]}
+                            ml={"10px"}
+                            as={FaSearch}
+                            w={"18px"}
+                            h={"15px"}
+                            onClick={
+                                handleSearchIconClick
+                            }
+                        />
+                    </Flex>
+                ) : (
+                    <Flex
+                        align={"center"}
+                    >
+                        <Flex>
+                            <Icon
+                                as={FaUser}
+                                w={"40px"}
+                                h={"30px"}
+                            />
+                            <Icon
+                                pos={"relative"}
+                                as={FaCheckCircle}
+                                top={"-1"} right={"5"}
+                                color={"#000000"}
+                                borderRadius={"50%"}
+                                bg={"#FFFFFF"}
+                            />
+                        </Flex>
+                        <Icon
+                            display={["flex", "flex", "none"]}
+                            ml={"10px"}
+                            as={FaSearch}
+                            w={"18px"}
+                            h={"15px"}
+                            onClick={
+                                handleSearchIconClick
+                            }
+                        />
+                    </Flex>
+                )}
+            </Flex>
         </Flex>
     )
 
