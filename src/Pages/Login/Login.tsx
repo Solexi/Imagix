@@ -93,12 +93,12 @@ const Login: React.FC = () => {
             <Icon
                 as={Image}
                 src={imagixLogo}
-                w={"268px"}
-                h={"96px"}
+                w={["220px", "268px"]}
+                h={["76px", "96px"]}
                 mb={"30px"}
             />
             <Box
-                w={"448px"}
+                w={["310px", "448px"]}
                 bg={"#FFFFFF"}
                 borderRadius={"10px"}
                 alignSelf={"center"}
@@ -113,7 +113,7 @@ const Login: React.FC = () => {
                 >
                     <Text
                         textAlign={"center"}
-                        fontSize={"24px"}
+                        fontSize={["20px", "24px"]}
                         fontWeight={700}
                         fontFamily={"Poppins"}
                         lineHeight={"14px"}
@@ -125,38 +125,40 @@ const Login: React.FC = () => {
                     <Flex fontFamily={"Poppins"} mx={["20px", "20px", "24px", "26px", "35px", "35px"]}>
                         <form>
                             <FormControl isInvalid={emailError !== ''}>
-                                <FormLabel fontSize={"14px"} mb={"6px"} mt={"15px"} color={"#000000"}>Email Address</FormLabel>
+                                <FormLabel fontSize={["12px", "14px"]} mb={"6px"} mt={"15px"} color={"#000000"}>Email Address</FormLabel>
                                 <Input
                                     type="email"
                                     value={email}
                                     onChange={handleEmailChange}
                                     placeholder={"Enter your email address"}
-                                    fontSize={"14px"}
+                                    fontSize={["12px", "14px"]} 
                                     fontWeight={500}
+                                    color={"#000100"}
                                     p={"16px"}
                                     py={"4px"}
                                     bg={"#F0F1F8"}
                                     borderRadius={5}
-                                    w={"376px"}
+                                    w={["270px", "380px"]}
                                     required
                                 />
-                                <FormErrorMessage color={"red"} fontSize={"12px"}>{emailError}</FormErrorMessage>
+                                <FormErrorMessage color={"red"} fontSize={["11px", "12px"]} >{emailError}</FormErrorMessage>
                             </FormControl>
                             <FormControl>
-                                <FormLabel fontSize={"14px"} mb={"6px"} mt={"15px"} color={"#000000"}>Password</FormLabel>
+                                <FormLabel fontSize={["12px", "14px"]}  mb={"6px"} mt={"15px"} color={"#000000"}>Password</FormLabel>
                                 <InputGroup>
                                     <Input
                                         type={showPassword ? "text" : "password"}
                                         value={password}
                                         onChange={handlePasswordChange}
                                         placeholder={"Enter your password"}
-                                        fontSize={"14px"}
+                                        fontSize={["12px", "14px"]} 
                                         fontWeight={500}
                                         p={"16px"}
+                                        color={"#000100"}
                                         py={"4px"}
                                         bg={"#F0F1F8"}
                                         borderRadius={5}
-                                        w={"376px"}
+                                        w={["270px", "380px"]}
                                         required
                                     />
                                     <InputRightElement>
@@ -173,7 +175,7 @@ const Login: React.FC = () => {
                                         />
                                     </InputRightElement>
                                 </InputGroup>
-                                <FormErrorMessage color={"red"} fontSize={"12px"}>{passwordError}</FormErrorMessage>
+                                <FormErrorMessage color={"red"} fontSize={["11px", "12px"]}>{passwordError}</FormErrorMessage>
                             </FormControl>
 
                             {error && (

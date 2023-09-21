@@ -1,23 +1,25 @@
-import {Flex, Image, Input, InputGroup, InputRightElement, Link as ChakraLink, Icon, Badge } from "@chakra-ui/react";
+import { Flex, Image, Input, InputGroup, InputRightElement, Link as ChakraLink, Icon, Badge } from "@chakra-ui/react";
 import imagixLogo from '../../assets/icon-logo.png';
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleCheck, faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { Link } from "react-router-dom";
-import { FaCheckCircle, FaUser } from "react-icons/fa";
+import { FaCheckCircle, FaSearch, FaUser } from "react-icons/fa";
 
 interface NavbarProps {
     onSearch: (query: string) => void;
-    onClearSearch: () => void; // Add the onClearSearch prop
+    onClearSearch: () => void;
+    onToggleSearchBar: () => void;
 }
-const Navbar: React.FC<NavbarProps> = ({ onSearch, onClearSearch }) => {
+const Navbar: React.FC<NavbarProps> = ({ onSearch, onClearSearch, onToggleSearchBar }) => {
     const [query, setQuery] = useState('');
     const [showResults, setShowResults] = useState(false);
     const [clearQuery, setClearQuery] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    // const [search, setSearch] = useState(false);
 
-    useEffect (() => {
+    useEffect(() => {
         const auth = getAuth();
 
         // Check if the user is already logged in
@@ -28,7 +30,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch, onClearSearch }) => {
                 setIsLoggedIn(false);
             }
         });
-    })
+    }, [])
 
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,9 +56,16 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch, onClearSearch }) => {
 
     const handleSearch = () => {
         onSearch(query);
+        // setSearch(true);
     };
 
+    const handleSearchIconClick = () => {
+        onToggleSearchBar();
+        handleSearch();
+      };
+
     return (
+        <Flex>
         <Flex
             as={"nav"}
             dir={"row"}
@@ -72,15 +81,15 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch, onClearSearch }) => {
         >
             <Image
                 src={imagixLogo}
-                w={"130px"}
-                h={"48px"}
+                w={["100px", "100px", "100px", "130px"]}
+                h={["40px", "40px", "38px", "48px"]}
             />
-            <Flex>
+            <Flex display={["none", "none", "flex"]}>
                 <InputGroup>
                     <Input
                         value={query}
                         zIndex={2}
-                        w={"36.46vw"}
+                        w={["","","30vw","36.46vw"]}
                         placeholder={"Search by tags..."}
                         h={"36px"}
                         color={"#000000"}
@@ -132,30 +141,38 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch, onClearSearch }) => {
                 </InputGroup>
             </Flex>
             {!isLoggedIn ? (
-                <ChakraLink
-                    as={Link}
-                    cursor={"pointer"}
-                    to={"/login"}
-                    color={"#FFFFFF"}
-                    // fontSize={"14px"}
-                    fontWeight={700}
-                    fontFamily={"Poppins"}
-                    _hover={{borderBottom: "3px solid #036"}}
+                <Flex
+                    align={"center"}
                 >
-                    Login
-                </ChakraLink>
+                    <ChakraLink
+                        as={Link}
+                        cursor={"pointer"}
+                        to={"/login"}
+                        color={"#FFFFFF"}
+                        fontWeight={700}
+                        fontFamily={"Poppins"}
+                        _hover={{ borderBottom: "3px solid #036" }}
+                    >
+                        Login
+                    </ChakraLink>
+                    <Icon
+                        display={["flex", "flex", "none"]}
+                        ml={"10px"}
+                        as={FaSearch}
+                        w={"18px"}
+                        h={"15px"}
+                        onClick={
+                            handleSearchIconClick
+                        }
+                    />
+                </Flex>
             ) : (
                 <Flex>
-                <Icon
-                    as={FaUser}
-                    w={"40px"}
-                    h={"30px"}
-                />
-                {/* <Badge  
-                    borderRadius="50%" 
-                    // px={"6px"}
-                    h={"14px"}
-                    fontSize={"12px"} fontWeight={900} textAlign={"center"} pos={"relative"} top={"1"} right={"5"}> */}
+                    <Icon
+                        as={FaUser}
+                        w={"40px"}
+                        h={"30px"}
+                    />
                     <Icon
                         pos={"relative"}
                         as={FaCheckCircle}
@@ -164,9 +181,9 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch, onClearSearch }) => {
                         borderRadius={"50%"}
                         bg={"#FFFFFF"}
                     />
-                {/* </Badge> */}
                 </Flex>
             )}
+        </Flex>
         </Flex>
     )
 

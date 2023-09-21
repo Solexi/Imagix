@@ -35,7 +35,7 @@ export const imageData = [
     {
         id: 4,
         url: landPaint,
-        tags: ["Aesthetics", "Landscape", "Trees", "Art"]
+        tags: ["Aesthetics", "Landscape", "Art"]
     },
     {
         id: 5,
@@ -60,7 +60,7 @@ export const imageData = [
     {
         id: 9,
         url: nyc,
-        tags: ["Photography", "Wallpaper", "Aesthetics"]
+        tags: ["Photography", "Wallpaper"]
     },
     {
         id: 10,

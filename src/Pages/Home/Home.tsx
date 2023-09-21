@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Image, Flex, Text } from "@chakra-ui/react";
+import { Box, Image, Flex, Text, Input, InputGroup } from "@chakra-ui/react";
 import Navbar from "../../components/Navbar";
 import { imageData } from "../../static";
 import LoadingSpinner from "../../components/LoadingSpinner";
@@ -9,6 +9,7 @@ import LoginPopup from "../../components/LoginPopup/index";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { motion } from "framer-motion";
 import NoImage from "../../components/NoImage";
+import { TouchBackend } from "react-dnd-touch-backend";
 
 interface ImageData {
     id: number;
@@ -24,6 +25,8 @@ const Home = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [showLoginPopup, setShowLoginPopup] = useState(false);
     const [noImages, setNoImages] = useState(false);
+    const [search, setSearch] = useState(false);
+    const [showSearchBar, setShowSearchBar] = useState(false);
 
     useEffect(() => {
         // Initialize Firebase authentication
@@ -65,13 +68,17 @@ const Home = () => {
         if (filtered.length === 0) {
             setNoImages(true);
         } else {
-            setNoImages(false); 
+            setNoImages(false);
         }
     };
 
     const clearSearch = () => {
         setSearchTerm("");
         setFilteredImages([]);
+    };
+
+    const toggleSearchBar = () => {
+        setShowSearchBar(!showSearchBar);
     };
 
     // Define DND handlers for reordering images
@@ -88,6 +95,11 @@ const Home = () => {
             setShowLoginPopup(true); // Show the login popup
         }
     };
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newSearchTerm = e.target.value;
+        setSearchTerm(newSearchTerm);
+        handleSearch(newSearchTerm);
+    };
 
     if (loading) {
         return (
@@ -100,84 +112,119 @@ const Home = () => {
         );
     }
 
+    const backend = window.innerWidth < 768 ? TouchBackend : HTML5Backend;
+
     return (
-        <DndProvider backend={HTML5Backend}>
+        <DndProvider backend={backend}>
             <Flex
-                dir="column"
+                flexDirection="column"
                 height="100vh"
+                justify={"center"}
                 overflow="hidden"
-                // w={"100%"}
             >
-                <Navbar onSearch={handleSearch} onClearSearch={clearSearch} />
+                <Flex>
+                    <Navbar onSearch={handleSearch} onClearSearch={clearSearch} onToggleSearchBar={toggleSearchBar} />
+                    {showSearchBar && (
+                        <InputGroup position="absolute" top="88px" px={"7vw"} display={["flex", "flex", "none"]}>
+                            <Input
+                                value={searchTerm}
+                                w={["90vw"]}
+                                placeholder={"Search by tags..."}
+                                h={"36px"}
+                                color={"#000000"}
+                                fontSize={"16px"}
+                                fontWeight={400}
+                                bg={"#FFFFFF"}
+                                border={"2px solid #D1D5DB"}
+                                // px={"10px"}
+                                borderRadius={"6px"}
+                                _placeholder={{
+                                    color: "#000000",
+                                    fontSize: "16px",
+                                    fontWeight: 400,
+                                }}
+                                onChange={handleInputChange}
+                                onKeyPress={(e) => {
+                                    if (e.key === 'Enter') {
+                                        handleSearch(searchTerm);
+                                    }
+                                }}
+                            />
+                        </InputGroup>
+                    )}
+
+                </Flex>
                 <Box
                     flex="1"
                     overflowY="auto"
                 >
-                    <Box
-                        mx={"100px"}
-                        position={"absolute"}
-                        top={"150px"}
+                    <Flex
+                        w={["95%", "100%"]}
+                        px={["7.5vw", "7vw", "auto", "auto", "50px", "100px"]}
+                        // justify={"center"}
+                        pt={"150px"}
                         display="grid"
                         gap="30px"
-                        gridTemplateColumns="repeat(5, 1fr)"
+                        gridTemplateColumns={["repeat(2, 1fr)", "repeat(2, 1fr)", "2fr 2fr 0fr", "2fr 2fr 2fr 0fr", "repeat(4, 1fr)", "repeat(5, 1fr)"]}
                     >
                         {searchTerm && noImages ? (
                             <Box
                                 position={"absolute"}
-                                top={"180px"}
-                                left={"520px"}
+                                top={["100px", "180px"]}
+                                left={["28vw", "35vw", "40vw", "45vw", "43vw", "48vw"]}
                             >
                                 <NoImage />
                             </Box>
                         ) : (
-                        (searchTerm ? filteredImages : images).map(
-                            (image: ImageData, index: number) => (
-                                <Flex
-                                    flexDirection={"column"}
-                                >
-                                <motion.div
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.9 }}
-                                >
-                                    <DNDImage
-                                        key={image.id}
-                                        index={index}
-                                        image={image}
-                                        moveImage={moveImage}
-                                        onDragStart={handleDragStart}
-                                        isLoggedIn={isLoggedIn}
-                                    />
-                                </motion.div>
-                                <Box 
-                                    display={"flex"}
-                                    flexDir={"row"}
-                                >
-                                    {image.tags.map((tag) => (
-                                        <Flex
-                                            key={tag}
-                                            border={"0.5px dashed #EEEEEE"}
-                                            fontSize={"10px"}
-                                            fontWeight={500}
-                                            color={"#FFFFFF"}
-                                            fontFamily={"Poppins"}
-                                            borderRadius={"10px"}
-                                            px={"5px"}
-                                            py={"6px"}
-                                            mr={"5px"}
-                                            mt={"12px"}
-                                            cursor={"pointer"}
-                                            _hover={{color: "#000000", background: "#EFEFEF"}}
-                                            onClick={() => {handleSearch(tag); setSearchTerm(tag)}}
+                            (searchTerm ? filteredImages : images).map(
+                                (image: ImageData, index: number) => (
+                                    <Flex
+                                        flexDirection={"column"}
+                                    >
+                                        <motion.div
+                                            whileHover={{ scale: 1.02 }}
+                                            whileTap={{ scale: 0.9 }}
                                         >
-                                            {tag}
-                                        </Flex>
-                                    ))}
-                                </Box>
-                                </Flex>
+                                            <DNDImage
+                                                key={image.id}
+                                                index={index}
+                                                image={image}
+                                                moveImage={moveImage}
+                                                onDragStart={handleDragStart}
+                                                isLoggedIn={isLoggedIn}
+                                            />
+                                        </motion.div>
+                                        <Box
+                                            display={"flex"}
+                                            flexDir={"row"}
+                                            w={["150px", "250px"]}
+                                        >
+                                            {image.tags.map((tag) => (
+                                                <Flex
+                                                    key={tag}
+                                                    border={"0.5px dashed #EEEEEE"}
+                                                    fontSize={["7px", "10px"]}
+                                                    fontWeight={[800, 500]}
+                                                    color={"#FFFFFF"}
+                                                    fontFamily={"Poppins"}
+                                                    borderRadius={"10px"}
+                                                    px={"5px"}
+                                                    py={"6px"}
+                                                    mr={"5px"}
+                                                    mt={"12px"}
+                                                    cursor={"pointer"}
+                                                    _hover={{ color: "#000000", background: "#EFEFEF", transition: "0.3s ease-in-out" }}
+                                                    onClick={() => { handleSearch(tag); setSearchTerm(tag) }}
+                                                >
+                                                    {tag}
+                                                </Flex>
+                                            ))}
+                                        </Box>
+                                    </Flex>
+                                )
                             )
-                        )
                         )}
-                    </Box>
+                    </Flex>
                 </Box>
             </Flex>
             {showLoginPopup && !isLoggedIn && (
@@ -192,7 +239,6 @@ const Home = () => {
         </DndProvider>
     );
 };
-
 
 // Define the props interface for the DNDImage component
 interface DNDImageProps {
@@ -211,6 +257,8 @@ const DNDImage: React.FC<DNDImageProps> = ({
     isLoggedIn,
 }) => {
     const [showLoginPopup, setShowLoginPopup] = useState(false);
+    const [isDragging, setIsDragging] = useState(false);
+
     const [, ref] = useDrag({
         type: "IMAGE",
         item: { index },
@@ -235,9 +283,44 @@ const DNDImage: React.FC<DNDImageProps> = ({
         }
     };
 
+    const handleTouchStart = (e: React.TouchEvent) => {
+        onDragStart(); // Call the onDragStart prop
+
+        // Check if the user is logged in before allowing drag(touch) and drop
+        if (!isLoggedIn) {
+            setShowLoginPopup(true); // Show the login popup if not logged in
+        }
+
+        setIsDragging(true);
+
+        // Store the image index in a custom attribute
+        e.currentTarget.setAttribute("data-image-index", String(index));
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+        if (isDragging) {
+            e.preventDefault();
+        }
+    };
+
+    const handleTouchEnd = () => {
+        setIsDragging(false);
+    };
+
     return (
-        <div onDragStart={handleDragStart} ref={(node) => ref(drop(node))}>
-            <Image w="250px" h="390px" src={image.url} alt={image.tags[0]} />
+        <div
+            onDragStart={handleDragStart}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            ref={(node) => ref(drop(node))}
+        >
+            <Image
+                w={["150px", "230px", "240px", "230px", "280px", "250px"]}
+                h={["200px", "", "300px", "390px"]}
+                src={image.url}
+                alt={image.tags[0]}
+            />
         </div>
     );
 };
