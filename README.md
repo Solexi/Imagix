@@ -1,5 +1,5 @@
 
-# 📗 Imagix <a name="imagix"></a>
+# 📖 Imagix <a name="imagix"></a>
 
 > `Imagix` is a web application that allows users to explore and share images. Users can login to the gallery page, search for images, and reorder images via dragging and dropping.
 
@@ -128,7 +128,7 @@ To install the Imagix Project, follow these steps:
 [![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/sophia-ezeh-9884b6215/)
 [![Twitter](https://img.shields.io/badge/Twitter-%231DA1F2.svg?style=for-the-badge&logo=Twitter&logoColor=white)](https://twitter.com/sophix_ezeh/)
 
-[![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:ezehsophia4321@gmail.com) - Developer
+[![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:ezehsophia4321@gmail.com)
 
 ## 🔭 Future Features
 
@@ -152,5 +152,3 @@ If you find this project helpful or interesting, give it a star to show your sup
 ## 🙏 Acknowledgments <a name="acknowledgements"></a> -->
 > - Special thanks to Zuri HNGx for this project
 ```
-
-You should replace the placeholder text with your actual project details, including the live link, preview image, and specific instructions for setting up Firebase. Additionally, you can customize the "Future Features," "FAQ," and "Acknowledgments" sections as needed.
