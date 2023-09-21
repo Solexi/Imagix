@@ -116,16 +116,24 @@ const Home = () => {
 
     return (
         <DndProvider backend={backend}>
+             <Navbar onSearch={handleSearch} onClearSearch={clearSearch} onToggleSearchBar={toggleSearchBar} />
             <Flex
                 flexDirection="column"
                 height="100vh"
                 justify={"center"}
                 overflow="hidden"
+                w="100vw"
+                alignItems="center"
+                justifyContent="center"
             >
                 <Flex>
-                    <Navbar onSearch={handleSearch} onClearSearch={clearSearch} onToggleSearchBar={toggleSearchBar} />
                     {showSearchBar && (
-                        <InputGroup position="absolute" top="88px" px={"7vw"} display={["flex", "flex", "none"]}>
+                        <InputGroup 
+                            // position="absolute"
+                            top="88px" 
+                            px={"7vw"} 
+                            display={["flex", "flex", "none"]}
+                        >
                             <Input
                                 value={searchTerm}
                                 w={["90vw"]}
@@ -136,7 +144,6 @@ const Home = () => {
                                 fontWeight={400}
                                 bg={"#FFFFFF"}
                                 border={"2px solid #D1D5DB"}
-                                // px={"10px"}
                                 borderRadius={"6px"}
                                 _placeholder={{
                                     color: "#000000",
@@ -159,8 +166,8 @@ const Home = () => {
                     overflowY="auto"
                 >
                     <Flex
-                        w={["95%", "100%"]}
-                        px={["7.5vw", "7vw", "auto", "auto", "50px", "100px"]}
+                        // w={["95%", "100%"]}
+                        // px={["7.5vw", "7vw", "auto", "auto", "50px", "100px"]}
                         // justify={"center"}
                         pt={"150px"}
                         display="grid"
@@ -170,7 +177,7 @@ const Home = () => {
                         {searchTerm && noImages ? (
                             <Box
                                 position={"absolute"}
-                                top={["100px", "180px"]}
+                                top={["200px", "180px"]}
                                 left={["28vw", "35vw", "40vw", "45vw", "43vw", "48vw"]}
                             >
                                 <NoImage />
@@ -316,8 +323,8 @@ const DNDImage: React.FC<DNDImageProps> = ({
             ref={(node) => ref(drop(node))}
         >
             <Image
-                w={["150px", "230px", "240px", "230px", "280px", "250px"]}
-                h={["200px", "", "300px", "390px"]}
+                w={["150px", "200px", "240px", "230px", "280px", "250px"]}
+                h={["200px", "250px", "300px", "390px"]}
                 src={image.url}
                 alt={image.tags[0]}
             />

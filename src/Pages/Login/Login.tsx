@@ -58,7 +58,7 @@ const Login: React.FC = () => {
             navigate(`/home/${uID}`);
         } catch (error: any) {
             const errorCode = (error as AuthError).code;
-            const errorMessage = (error as AuthError).message;
+            const errorMessage = (error as AuthError).message.slice(22, -2);
 
             switch (errorCode) {
                 case "auth/invalid-email":

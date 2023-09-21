@@ -1,11 +1,13 @@
-import { Flex, Image, Input, InputGroup, InputRightElement, Link as ChakraLink, Icon, Badge } from "@chakra-ui/react";
+import { Flex, Image, Input, InputGroup, InputRightElement, Link as ChakraLink, Icon, Menu, MenuButton, IconButton, MenuList, MenuItem } from "@chakra-ui/react";
 import imagixLogo from '../../assets/icon-logo.png';
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { Link } from "react-router-dom";
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { Link, useNavigate } from "react-router-dom";
 import { FaCheckCircle, FaSearch, FaUser } from "react-icons/fa";
+import { CiLogout } from "react-icons/ci"
+import { auth } from "../../firebase/config";
 
 interface NavbarProps {
     onSearch: (query: string) => void;
@@ -17,7 +19,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch, onClearSearch, onToggleSearch
     const [showResults, setShowResults] = useState(false);
     const [clearQuery, setClearQuery] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    // const [search, setSearch] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const auth = getAuth();
@@ -63,6 +65,12 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch, onClearSearch, onToggleSearch
         onToggleSearchBar();
         handleSearch();
     };
+
+    const logout = async() => {
+        await signOut(auth);
+        navigate("/login")
+        
+    }
 
     return (
         <Flex>
@@ -170,21 +178,40 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch, onClearSearch, onToggleSearch
                     <Flex
                         align={"center"}
                     >
-                        <Flex>
-                            <Icon
-                                as={FaUser}
-                                w={"40px"}
-                                h={"30px"}
+                        <Menu>
+                            <MenuButton
+                                as={IconButton}
+                                aria-label='Options'
+                                bg={"transparent"}
+                                color={"#FFFFFF"}
+                                _hover={{ bg: "transparent" }}
+                                icon={
+                                    <Flex>
+                                        <Icon
+                                            as={FaUser}
+                                            w={"35px"}
+                                            h={"25px"}
+                                        />
+                                        <Icon
+                                            w={"12px"}
+                                            h={"12px"}
+                                            pos={"relative"}
+                                            as={FaCheckCircle}
+                                            top={"0"} right={"4"}
+                                            color={"#000000"}
+                                            borderRadius={"50%"}
+                                            bg={"#FFFFFF"}
+                                        />
+                                    </Flex>}
                             />
-                            <Icon
-                                pos={"relative"}
-                                as={FaCheckCircle}
-                                top={"-1"} right={"5"}
-                                color={"#000000"}
-                                borderRadius={"50%"}
-                                bg={"#FFFFFF"}
-                            />
-                        </Flex>
+                            <MenuList
+                                bg={"#292929"}
+                            >
+                                <MenuItem bg={"#292929"} onClick={logout} icon={<CiLogout />} command='⌘L'>
+                                    Logout
+                                </MenuItem>
+                            </MenuList>
+                        </Menu>
                         <Icon
                             display={["flex", "flex", "none"]}
                             ml={"10px"}
