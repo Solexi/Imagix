@@ -346,6 +346,7 @@ const DNDImage: React.FC<DNDImageProps> = ({
                 h={["200px", "250px", "300px", "390px"]}
                 src={image.url}
                 alt={image.tags[0]}
+                cursor={"-webkit-grab"}
             />
         </div>
     );
