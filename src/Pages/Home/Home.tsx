@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Image, Flex, Text, Input, InputGroup } from "@chakra-ui/react";
+import { Box, Image, Flex, Text, Input, InputGroup, Skeleton } from "@chakra-ui/react";
 import Navbar from "../../components/Navbar";
 import { imageData } from "../../static";
 import LoadingSpinner from "../../components/LoadingSpinner";
@@ -25,8 +25,9 @@ const Home = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [showLoginPopup, setShowLoginPopup] = useState(false);
     const [noImages, setNoImages] = useState(false);
-    const [search, setSearch] = useState(false);
     const [showSearchBar, setShowSearchBar] = useState(false);
+    const [imageLoading, setImageLoading] = useState(false);
+    const [showSkeleton, setShowSkeleton] = useState(true);
 
     useEffect(() => {
         // Initialize Firebase authentication
@@ -44,8 +45,11 @@ const Home = () => {
             try {
                 // Simulate loading delay for demonstration purposes
                 setTimeout(() => {
+                    setImageLoading(true);
+                    setLoading(false);
                     setImages(imageData);
-                    setLoading(false); // Set loading to false when data is fetched
+                    setImageLoading(false);
+                    setShowSkeleton(false)
                 }, 1000);
             } catch (error) {
                 console.error("Error fetching images: ", error);
@@ -116,7 +120,7 @@ const Home = () => {
 
     return (
         <DndProvider backend={backend}>
-             <Navbar onSearch={handleSearch} onClearSearch={clearSearch} onToggleSearchBar={toggleSearchBar} />
+            <Navbar onSearch={handleSearch} onClearSearch={clearSearch} onToggleSearchBar={toggleSearchBar} />
             <Flex
                 flexDirection="column"
                 height="100vh"
@@ -128,10 +132,10 @@ const Home = () => {
             >
                 <Flex>
                     {showSearchBar && (
-                        <InputGroup 
+                        <InputGroup
                             // position="absolute"
-                            top="88px" 
-                            px={"7vw"} 
+                            top="88px"
+                            px={"7vw"}
                             display={["flex", "flex", "none"]}
                         >
                             <Input
@@ -166,9 +170,7 @@ const Home = () => {
                     overflowY="auto"
                 >
                     <Flex
-                        // w={["95%", "100%"]}
                         // px={["7.5vw", "7vw", "auto", "auto", "50px", "100px"]}
-                        // justify={"center"}
                         pt={"150px"}
                         display="grid"
                         gap="30px"
@@ -192,14 +194,31 @@ const Home = () => {
                                             whileHover={{ scale: 1.02 }}
                                             whileTap={{ scale: 0.9 }}
                                         >
-                                            <DNDImage
-                                                key={image.id}
-                                                index={index}
-                                                image={image}
-                                                moveImage={moveImage}
-                                                onDragStart={handleDragStart}
-                                                isLoggedIn={isLoggedIn}
-                                            />
+                                            {imageLoading ? (
+                                                <Skeleton
+                                                    isLoaded={!imageLoading} // Check if the image is loaded
+                                                    startColor="#D1D5DB" // Color for the skeleton loader
+                                                    endColor="#292929"
+                                                    borderRadius="md"
+                                                >
+                                                    <Image
+                                                        src="../../assets/background.jpg"
+                                                        maxW="full"
+                                                        h={["200px", "250px", "300px", "390px"]}
+                                                        w={["150px", "200px", "240px", "230px", "280px", "250px"]}
+                                                        objectFit="cover"
+                                                        alt="background"
+                                                    />
+                                                </Skeleton>) : (
+                                                <DNDImage
+                                                    key={image.id}
+                                                    index={index}
+                                                    image={image}
+                                                    moveImage={moveImage}
+                                                    onDragStart={handleDragStart}
+                                                    isLoggedIn={isLoggedIn}
+                                                />
+                                            )}
                                         </motion.div>
                                         <Box
                                             display={"flex"}

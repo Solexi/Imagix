@@ -87,11 +87,15 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch, onClearSearch, onToggleSearch
                 bg={"#131313"}
                 borderBottom={"6px solid #292929"}
             >
+                <ChakraLink
+                    href="/"
+                >
                 <Image
                     src={imagixLogo}
                     w={["100px", "100px", "100px", "130px"]}
                     h={["40px", "40px", "38px", "48px"]}
                 />
+                </ChakraLink>
                 <Flex display={["none", "none", "flex"]}>
                     <InputGroup>
                         <Input
